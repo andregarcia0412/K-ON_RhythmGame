@@ -4,9 +4,10 @@ pygame.init()
 screen = pygame.display.set_mode((800, 1024))
 clock = pygame.time.Clock()
 pygame.display.set_caption("K-ON the game")
-game_active = True
+game_active = False
 running = True
 font = pygame.font.Font("jogo pygame/font/Pixeltype.ttf",50)
+music_active = False
 
 leftArrow_surface = pygame.image.load("jogo pygame/images/left-arrow.png").convert_alpha()
 leftArrow_rectangle = leftArrow_surface.get_rect(center = (250,950))
@@ -21,26 +22,45 @@ rightArrow_surface = pygame.image.load("jogo pygame/images/right arrow.png").con
 rightArrow_rectangle = rightArrow_surface.get_rect(center = (550,950))
 
 coloredLeftArrow_surface = pygame.image.load("jogo pygame/images/colored-left-arrow.png").convert_alpha()
-coloredLeftArrow_rectangle = coloredLeftArrow_surface.get_rect(center = (250,0))
+coloredLeftArrow_rectangle = coloredLeftArrow_surface.get_rect(center = (250,-150))
 
 coloredDownArrow_surface = pygame.image.load("jogo pygame/images/colored-down-arrow.png").convert_alpha()
-coloredDownArrow_rectangle = coloredDownArrow_surface.get_rect(center = (350,0))
+coloredDownArrow_rectangle = coloredDownArrow_surface.get_rect(center = (350,-159))
 
 coloredUpArrow_surface = pygame.image.load("jogo pygame/images/colored-up-arrow.png").convert_alpha()
-coloredUpArrow_rectangle = coloredUpArrow_surface.get_rect(center = (450, 0))
+coloredUpArrow_rectangle = coloredUpArrow_surface.get_rect(center = (450, -150))
 
 coloredRightArrow_surface = pygame.image.load("jogo pygame/images/colored-right-arrow.png").convert_alpha()
-coloredRightArrow_rectangle = coloredRightArrow_surface.get_rect(center = (550,0))
+coloredRightArrow_rectangle = coloredRightArrow_surface.get_rect(center = (550,-150))
 
 #points:
 points_value = 0
 combo = 0
 multiplier = 1
 
+start_text = "Press 1 to Start"
+start_surface = font.render(start_text, False, "white")
+start_surface_scaled = pygame.transform.scale(start_surface, (450,50))
+screen.blit(start_surface_scaled, (175, 512))
+
+bg_music = pygame.mixer.Sound("jogo pygame/sound/K-ON - Don't Say Lazy (16 bit).mp3")
+bg_music.set_volume(0.6)
+
+hit_sound = pygame.mixer.Sound("jogo pygame/sound/osu-hit-sound.mp3")
+hit_sound.set_volume(0.6)
+
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    if(pygame.key.get_pressed()[pygame.K_1]):
+        game_active = True
+        if not music_active:
+            music_active = True
+            bg_music.play()
+
 
     if game_active:
         points_text = "Points: " + str(points_value) 
@@ -65,11 +85,12 @@ while running:
         screen.blit(coloredUpArrow_surface , (coloredUpArrow_rectangle))
         screen.blit(coloredRightArrow_surface , (coloredRightArrow_rectangle))
 
+
         #arrows movement:
-        coloredLeftArrow_rectangle.y += 20
-        coloredDownArrow_rectangle.y += 20
-        coloredUpArrow_rectangle.y += 20
-        coloredRightArrow_rectangle.y += 20
+        coloredLeftArrow_rectangle.y += 30
+        coloredDownArrow_rectangle.y += 30
+        coloredUpArrow_rectangle.y += 30
+        coloredRightArrow_rectangle.y += 30
         
         if coloredLeftArrow_rectangle.y > 1024:
             coloredLeftArrow_rectangle.y = -150
@@ -100,21 +121,25 @@ while running:
 
         # collisions and points:
         if leftArrow_rectangle.colliderect(coloredLeftArrow_rectangle) and button_d:
+            hit_sound.play()
             coloredLeftArrow_rectangle.y = -150
             combo += 1
             points_value += 1 * multiplier
 
         if downArrow_rectangle.colliderect(coloredDownArrow_rectangle) and button_f:
+            hit_sound.play()
             coloredDownArrow_rectangle.y = -150
             combo += 1
             points_value += 1 * multiplier
 
         if upArrow_rectangle.colliderect(coloredUpArrow_rectangle) and button_j:
+            hit_sound.play()
             coloredUpArrow_rectangle.y = -150
             combo += 1
             points_value += 1 * multiplier
 
         if rightArrow_rectangle.colliderect(coloredRightArrow_rectangle) and button_k:
+            hit_sound.play()
             coloredRightArrow_rectangle.y = -150
             combo += 1
             points_value += 1 * multiplier
@@ -127,6 +152,7 @@ while running:
             multiplier = 4
         else:
             multiplier = 1
+
     #game display:
     pygame.display.update()
     clock.tick(60)
