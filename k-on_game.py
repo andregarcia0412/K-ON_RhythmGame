@@ -1,4 +1,5 @@
 import pygame
+import random #falta aplicar o random
 
 pygame.init()
 screen = pygame.display.set_mode((800, 1024))
@@ -71,6 +72,11 @@ while running:
 
         screen.fill("purple")
 
+        position_left = random.randint(-150, 50)
+        position_down = random.randint(-150, 50)
+        position_up = random.randint(-150, 50)
+        position_right = random.randint(-150, 50)
+
         #player arrows & text
         screen.blit(leftArrow_surface, (leftArrow_rectangle))
         screen.blit(downArrow_surface, (downArrow_rectangle))
@@ -87,28 +93,28 @@ while running:
 
 
         #arrows movement:
-        coloredLeftArrow_rectangle.y += 30
-        coloredDownArrow_rectangle.y += 30
-        coloredUpArrow_rectangle.y += 30
-        coloredRightArrow_rectangle.y += 30
+        coloredLeftArrow_rectangle.y += 20
+        coloredDownArrow_rectangle.y += 20
+        coloredUpArrow_rectangle.y += 20
+        coloredRightArrow_rectangle.y += 20
         
         if coloredLeftArrow_rectangle.y > 1024:
-            coloredLeftArrow_rectangle.y = -150
+            coloredLeftArrow_rectangle.y = position_left
             points_value -= 1
             combo = 0
 
         if coloredDownArrow_rectangle.y > 1024:
-            coloredDownArrow_rectangle.y = -150
+            coloredDownArrow_rectangle.y = position_down
             points_value -= 1
             combo = 0
 
         if  coloredUpArrow_rectangle.y > 1024:
-            coloredUpArrow_rectangle.y = -150
+            coloredUpArrow_rectangle.y = position_up
             points_value -= 1
             combo = 0
 
         if coloredRightArrow_rectangle.y > 1024:
-            coloredRightArrow_rectangle.y = -150
+            coloredRightArrow_rectangle.y = position_right
             points_value -= 1
             combo = 0
 
@@ -122,25 +128,25 @@ while running:
         # collisions and points:
         if leftArrow_rectangle.colliderect(coloredLeftArrow_rectangle) and button_d:
             hit_sound.play()
-            coloredLeftArrow_rectangle.y = -150
+            coloredLeftArrow_rectangle.y = position_left
             combo += 1
             points_value += 1 * multiplier
 
         if downArrow_rectangle.colliderect(coloredDownArrow_rectangle) and button_f:
             hit_sound.play()
-            coloredDownArrow_rectangle.y = -150
+            coloredDownArrow_rectangle.y = position_down
             combo += 1
             points_value += 1 * multiplier
 
         if upArrow_rectangle.colliderect(coloredUpArrow_rectangle) and button_j:
             hit_sound.play()
-            coloredUpArrow_rectangle.y = -150
+            coloredUpArrow_rectangle.y = position_up
             combo += 1
             points_value += 1 * multiplier
 
         if rightArrow_rectangle.colliderect(coloredRightArrow_rectangle) and button_k:
             hit_sound.play()
-            coloredRightArrow_rectangle.y = -150
+            coloredRightArrow_rectangle.y = position_right
             combo += 1
             points_value += 1 * multiplier
 
