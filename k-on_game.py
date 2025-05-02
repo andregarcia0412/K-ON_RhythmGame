@@ -1,5 +1,5 @@
 import pygame
-import random #falta aplicar o random
+import random
 
 pygame.init()
 screen = pygame.display.set_mode((800, 1024))
